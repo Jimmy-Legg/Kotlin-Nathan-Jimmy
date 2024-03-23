@@ -21,11 +21,13 @@ class MainActivity : ComponentActivity() {
 
     private var todoList by mutableStateOf(emptyList<Todo>())
 
+    private var defaultJson = "[]"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val todoListJson = loadJsonFile("todo_list.json")
-        todoList = parseTodoList(todoListJson ?: "[{\"name\": \"Task 1\", \"date\": \"2023-03-25\", \"isDone\": false},{\"name\": \"Task 2\", \"date\": \"2023-03-26\", \"isDone\": true}]")
+        todoList = parseTodoList(todoListJson ?: defaultJson)
 
         if (todoListJson == null) {
             createDefaultJsonFile("todo_list.json")
@@ -45,10 +47,24 @@ class MainActivity : ComponentActivity() {
 
     private fun updateTodoList(newTodoList: List<Todo>) {
         todoList = newTodoList
+        saveTodoList("todo_list.json", newTodoList)
     }
+
+    private fun saveTodoList(fileName: String, todoList: List<Todo>) {
+        try {
+            val gson = Gson()
+            val jsonData = gson.toJson(todoList)
+            val outputStream: OutputStream = openFileOutput(fileName, MODE_PRIVATE)
+            outputStream.write(jsonData.toByteArray())
+            outputStream.close()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+    }
+
     private fun loadJsonFile(fileName: String): String? {
         return try {
-            val inputStream = assets.open(fileName)
+            val inputStream = openFileInput(fileName)
             val size = inputStream.available()
             val buffer = ByteArray(size)
             inputStream.read(buffer)
@@ -62,9 +78,8 @@ class MainActivity : ComponentActivity() {
 
     private fun createDefaultJsonFile(fileName: String) {
         try {
-            val defaultJsonData = "[{\"name\": \"Task 1\", \"date\": \"2023-03-25\", \"isDone\": false},{\"name\": \"Task 2\", \"date\": \"2023-03-26\", \"isDone\": true}]"
             val outputStream: OutputStream = openFileOutput(fileName, MODE_PRIVATE)
-            outputStream.write(defaultJsonData.toByteArray())
+            outputStream.write(defaultJson.toByteArray())
             outputStream.close()
         } catch (e: IOException) {
             e.printStackTrace()
