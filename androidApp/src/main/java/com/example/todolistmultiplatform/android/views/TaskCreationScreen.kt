@@ -6,11 +6,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -22,11 +21,9 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+
 @Composable
 fun TaskCreationScreen(navController: NavHostController, onTaskCreated: (Todo) -> Unit) {
-    val backgroundColor = MaterialTheme.colorScheme.background
-    val contentColor = contentColorFor(backgroundColor)
-
     val name = remember { mutableStateOf("") }
     val date = remember { mutableStateOf("") }
 
@@ -52,17 +49,18 @@ fun TaskCreationScreen(navController: NavHostController, onTaskCreated: (Todo) -
             isError = !isNameValid.value,
             modifier = Modifier.fillMaxWidth()
         )
+        Spacer(modifier = Modifier.height(16.dp))
+
         TextField(
             value = date.value,
             onValueChange = { date.value = it },
-            label = { Text("Due Date (yyyy-MM-dd)") },
+            label = { Text("Task Date (YYYY-MM-DD)") },
             isError = !isDateValid.value,
             modifier = Modifier.fillMaxWidth()
         )
-
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
+        FloatingActionButton(
             onClick = {
                 if (validateInputs()) {
                     onTaskCreated(Todo(name.value, date.value, false))
@@ -73,12 +71,29 @@ fun TaskCreationScreen(navController: NavHostController, onTaskCreated: (Todo) -
                     }
                 }
             },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text("Create Task")
-        }
+            modifier = Modifier.fillMaxWidth(),
+            contentColor = MaterialTheme.colorScheme.inversePrimary,
+            content = {
+                Text("Create Task", color = MaterialTheme.colorScheme.primary)
+            }
+        )
+
+        Spacer(modifier = Modifier.height(8.dp)) // Adding a smaller spacer
+
+        // Back to Main Screen Button
+        FloatingActionButton(
+            onClick = {
+                navController.navigate("task_list")
+            },
+            modifier = Modifier.fillMaxWidth(),
+            contentColor = MaterialTheme.colorScheme.inversePrimary,
+            content = {
+                Text("Back to Main Screen", color = MaterialTheme.colorScheme.primary)
+            }
+        )
     }
 }
+
 
 fun isValidDate(dateString: String): Boolean {
     return try {

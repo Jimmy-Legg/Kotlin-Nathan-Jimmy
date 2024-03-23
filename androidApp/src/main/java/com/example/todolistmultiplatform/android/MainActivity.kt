@@ -27,11 +27,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val todoListJson = loadJsonFile("todo_list.json")
+        val todoListJson = loadJsonFile()
         todoList = parseTodoList(todoListJson ?: defaultJson)
 
         if (todoListJson == null) {
-            createDefaultJsonFile("todo_list.json")
+            createDefaultJsonFile()
         }
 
         setContent {
@@ -41,22 +41,38 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    NavGraph(navController, todoList) { newTodo -> updateTodoList(todoList + newTodo) }
+                    NavGraph(
+                        navController = navController,
+                        todoList = todoList,
+                        onAddTodo = { newTodoList -> updateTodoList(newTodoList) },
+                        onDeleteTask = { deletedTodo -> deleteTask(deletedTodo) },
+                        onCheckboxClicked = { todo, isChecked -> updateTodoStatus(todo, isChecked) }
+                    )
                 }
             }
         }
     }
 
-    private fun updateTodoList(newTodoList: List<Todo>) {
-        todoList = newTodoList
-        saveTodoList("todo_list.json", newTodoList)
+    private fun deleteTask(todo: Todo) {
+        val updatedTodoList = todoList.filterNot { it == todo }
+        updateTodoList(updatedTodoList)
     }
 
-    private fun saveTodoList(fileName: String, todoList: List<Todo>) {
+    private fun updateTodoList(newTodoList: List<Todo>) {
+        todoList = newTodoList
+        saveTodoList(newTodoList)
+    }
+
+    private fun updateTodoStatus(todo: Todo, isChecked: Boolean) {
+        val updatedTodoList = todoList.map { if (it == todo) it.copy(isDone = isChecked) else it }
+        updateTodoList(updatedTodoList)
+    }
+
+    private fun saveTodoList(todoList: List<Todo>) {
         try {
             val gson = Gson()
             val jsonData = gson.toJson(todoList)
-            val outputStream: OutputStream = openFileOutput(fileName, MODE_PRIVATE)
+            val outputStream: OutputStream = openFileOutput("todo_list.json", MODE_PRIVATE)
             outputStream.write(jsonData.toByteArray())
             outputStream.close()
         } catch (e: IOException) {
@@ -64,9 +80,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun loadJsonFile(fileName: String): String? {
+    private fun loadJsonFile(): String? {
         return try {
-            val inputStream = openFileInput(fileName)
+            val inputStream = openFileInput("todo_list.json")
             val size = inputStream.available()
             val buffer = ByteArray(size)
             inputStream.read(buffer)
@@ -78,9 +94,9 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private fun createDefaultJsonFile(fileName: String) {
+    private fun createDefaultJsonFile() {
         try {
-            val outputStream: OutputStream = openFileOutput(fileName, MODE_PRIVATE)
+            val outputStream: OutputStream = openFileOutput("todo_list.json", MODE_PRIVATE)
             outputStream.write(defaultJson.toByteArray())
             outputStream.close()
         } catch (e: IOException) {
@@ -91,6 +107,6 @@ class MainActivity : ComponentActivity() {
     private fun parseTodoList(json: String): List<Todo> {
         val gson = Gson()
         val listType = object : TypeToken<List<Todo>>() {}.type
-        return gson.fromJson<List<Todo>>(json, listType)
+        return gson.fromJson(json, listType)
     }
 }

@@ -7,16 +7,27 @@ import androidx.navigation.compose.composable
 import com.example.todolistmultiplatform.android.item.Todo
 
 @Composable
-fun NavGraph(navController: NavHostController, todoList: List<Todo>, onAddTodo: (List<Todo>) -> Unit) {
+fun NavGraph(
+    navController: NavHostController,
+    todoList: List<Todo>,
+    onAddTodo: (List<Todo>) -> Unit,
+    onDeleteTask: (Todo) -> Unit,
+    onCheckboxClicked: (Todo, Boolean) -> Unit // Add this parameter
+) {
     NavHost(navController = navController, startDestination = "task_list") {
         composable("task_list") {
-            AppMainScreen(todoList, onNavigateToTaskCreation = {
-                navController.navigate("task_creation")
-            })
+            AppMainScreen(
+                todoList = todoList,
+                onNavigateToTaskCreation = {
+                    navController.navigate("task_creation")
+                },
+                onDeleteTask = onDeleteTask,
+                onCheckboxClicked = onCheckboxClicked // Pass down the callback
+            )
         }
         composable("task_creation") {
             TaskCreationScreen(
-                navController,
+                navController = navController,
                 onTaskCreated = { todo ->
                     val newTodoList = todoList.toMutableList()
                     newTodoList.add(todo)
