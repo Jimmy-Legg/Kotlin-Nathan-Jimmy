@@ -10,8 +10,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import com.example.todolistmultiplatform.android.item.Todo
-import com.example.todolistmultiplatform.android.views.AppMainScreen
+import com.example.todolistmultiplatform.android.views.NavGraph
 import com.google.firebase.crashlytics.buildtools.reloc.com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import java.io.IOException
@@ -39,7 +40,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    AppMainScreen(todoList, onAddTodo = ::updateTodoList)
+                    val navController = rememberNavController()
+                    NavGraph(navController, todoList) { newTodo -> updateTodoList(todoList + newTodo) }
                 }
             }
         }

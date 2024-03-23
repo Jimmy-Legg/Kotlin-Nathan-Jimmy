@@ -20,7 +20,7 @@ import androidx.compose.ui.graphics.Color
 import com.example.todolistmultiplatform.android.item.Todo
 
 @Composable
-fun AppMainScreen(todoList: List<Todo>, onAddTodo: (List<Todo>) -> Unit) {
+fun AppMainScreen(todoList: List<Todo>, onNavigateToTaskCreation: () -> Unit) {
     val backgroundColor = MaterialTheme.colorScheme.background
     val contentColor = contentColorFor(backgroundColor)
 
@@ -34,11 +34,9 @@ fun AppMainScreen(todoList: List<Todo>, onAddTodo: (List<Todo>) -> Unit) {
             val newTodoList = remember { mutableStateOf(todoList) }
 
             FloatingActionButton(
-                modifier = Modifier.align(Alignment.BottomEnd), // Align the FloatingActionButton to the bottom-right corner
+                modifier = Modifier.align(Alignment.BottomEnd),
                 onClick = {
-                    val newTask = Todo("New Task", "2023-03-25", false)
-                    newTodoList.value = newTodoList.value + newTask
-                    onAddTodo(newTodoList.value)
+                    onNavigateToTaskCreation()
                 },
                 containerColor = Color.Green,
                 contentColor = contentColor
