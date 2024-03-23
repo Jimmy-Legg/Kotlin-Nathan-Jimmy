@@ -3,7 +3,7 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@android:drawable/btn_plus"
         android:label="@string/AppName"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">

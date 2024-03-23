@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
+    id("org.jetbrains.kotlin.plugin.serialization") version "1.5.31"
 }
 
 android {
@@ -47,5 +48,6 @@ dependencies {
     implementation(libs.firebase.crashlytics.buildtools)
     debugImplementation(libs.compose.ui.tooling)
 
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
     implementation("com.google.code.gson:gson:2.8.8")
 }
