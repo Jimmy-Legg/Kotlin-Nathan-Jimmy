@@ -16,14 +16,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.todolistmultiplatform.android.item.Todo
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 
 @Composable
-fun TaskCreationScreen(navController: NavHostController, onTaskCreated: (Todo) -> Unit) {
+fun TaskCreationScreen(navController: NavHostController, onTaskCreated: (name : String, date : String) -> Unit) {
     val name = remember { mutableStateOf("") }
     val date = remember { mutableStateOf("") }
 
@@ -63,7 +62,7 @@ fun TaskCreationScreen(navController: NavHostController, onTaskCreated: (Todo) -
         FloatingActionButton(
             onClick = {
                 if (validateInputs()) {
-                    onTaskCreated(Todo(name.value, date.value, false))
+                    onTaskCreated(name.value, date.value)
                     navController.navigate("task_list") {
                         popUpTo("task_creation") {
                             inclusive = true

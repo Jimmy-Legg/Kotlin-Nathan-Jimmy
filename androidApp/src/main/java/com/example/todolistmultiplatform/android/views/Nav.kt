@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.todolistmultiplatform.android.item.Todo
+import com.example.todolistmultiplatform.android.utils.getFreeId
 
 @Composable
 fun NavGraph(
@@ -28,9 +29,10 @@ fun NavGraph(
         composable("task_creation") {
             TaskCreationScreen(
                 navController = navController,
-                onTaskCreated = { todo ->
+                onTaskCreated = { name : String, date : String ->
                     val newTodoList = todoList.toMutableList()
-                    newTodoList.add(todo)
+                    val newId = getFreeId(newTodoList)
+                    newTodoList.add(Todo(newId, name, date, false))
                     onAddTodo(newTodoList)
                     navController.popBackStack()
                 }
