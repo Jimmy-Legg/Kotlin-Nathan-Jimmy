@@ -1,5 +1,7 @@
 package com.example.todolistmultiplatform.android.views
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
@@ -51,6 +53,7 @@ import com.example.todolistmultiplatform.android.item.Todo
 import kotlin.math.abs
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AppMainScreen(
     todoList: List<Todo>,
@@ -134,6 +137,7 @@ fun SortDropdownMenu(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TodoList(todoList: List<Todo>, onDelete: (Todo) -> Unit, onCheckboxClicked: (Todo, Boolean) -> Unit) {
     LazyColumn {
@@ -147,6 +151,7 @@ fun TodoList(todoList: List<Todo>, onDelete: (Todo) -> Unit, onCheckboxClicked: 
         }
     }
 }
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TodoItem(
     todo: Todo,
@@ -160,6 +165,7 @@ fun TodoItem(
     val slidingThreshold = 50.dp
     val startThreshold = 5.dp
 
+    val overdue = todo.isOverdue()
     Box(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -197,12 +203,21 @@ fun TodoItem(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = todo.date ?: "No Date",
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
+                        color = if (overdue) Color.Red else Color.Black
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = if (todo.isDone) "Done" else "Not Done",
-                        color = if (todo.isDone) Color.Green else Color.Red,
+                        text = when {
+                            overdue && !todo.isDone -> "Overdue"
+                            todo.isDone -> "Done"
+                            else -> "Not Done"
+                        },
+                        color = when {
+                            overdue && !todo.isDone -> Color.Red
+                            todo.isDone -> Color.Green
+                            else -> Color.Black
+                        },
                         fontSize = 14.sp
                     )
                 }
