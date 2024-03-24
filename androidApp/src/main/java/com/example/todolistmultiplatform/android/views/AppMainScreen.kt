@@ -36,6 +36,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -50,7 +51,6 @@ import com.example.todolistmultiplatform.android.item.Todo
 import kotlin.math.abs
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppMainScreen(
     todoList: List<Todo>,
@@ -153,7 +153,7 @@ fun TodoItem(
     onDelete: () -> Unit,
     onCheckboxClicked: (Boolean) -> Unit
 ) {
-    var offsetX by remember { mutableStateOf(0f) }
+    var offsetX by remember { mutableFloatStateOf(0f) }
     var isSwiped by remember { mutableStateOf(false) }
     var isConfirmVisible by remember { mutableStateOf(false) }
 
@@ -172,6 +172,9 @@ fun TodoItem(
                 modifier = Modifier
                     .padding(16.dp)
                     .offset(offsetX.dp, 0.dp)
+            ) {
+                Column(modifier = Modifier
+                    .weight(1f)
                     .pointerInput(Unit) {
                         detectDragGestures(onDragStart = {
                             // Reset offsetX when starting to slide
@@ -181,7 +184,7 @@ fun TodoItem(
                                 isConfirmVisible = true
                             }
                             offsetX = 0f
-                            isSwiped = false // Reset isSwiped state
+                            isSwiped = false
                         }) { _, dragAmount ->
                             if (abs(dragAmount.x) > startThreshold.value) {
                                 offsetX += dragAmount.x
@@ -189,8 +192,7 @@ fun TodoItem(
                             }
                         }
                     }
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
+                ) {
                     Text(text = todo.name, fontSize = 18.sp)
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
@@ -210,7 +212,8 @@ fun TodoItem(
                     onCheckedChange = { isChecked ->
                         onCheckboxClicked(isChecked)
                     },
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier
+                        .size(24.dp)
                 )
             }
         }
