@@ -1,3 +1,4 @@
+package com.example.todolistmultiplatform.android.views
 
 import android.os.Build
 import android.util.Log
@@ -24,7 +25,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 import java.util.Date
 import java.util.Locale
 
@@ -35,24 +35,24 @@ var datePattern = "dd/MM/yyyy"
 @Composable
 fun TaskCreationScreen(
     navController: NavHostController,
-    onTaskCreated: (name: String, date: String) -> Unit
+    onTaskCreated: (name: String, date: String?) -> Unit // Date is now nullable
 ) {
 
     val name = remember { mutableStateOf("") }
-    val date = remember { mutableStateOf("") }
+    val date = remember { mutableStateOf<String?>(null) } // Date is now nullable
 
     val isNameValid = remember { mutableStateOf(true) }
     val isDateValid = remember { mutableStateOf(true) }
 
     fun validateInputs(): Boolean {
         isNameValid.value = name.value.isNotBlank()
-        isDateValid.value = isValidDate(date.value)
+        isDateValid.value = date.value == null || isValidDate(date.value)
 
         return isNameValid.value && isDateValid.value
     }
 
     val datePickerState = rememberDatePickerState()
-    val dateFormatter = DateTimeFormatter.ofPattern(datePattern)
+    val dateFormatter = SimpleDateFormat(datePattern, Locale.getDefault())
 
     Column(
         modifier = Modifier
@@ -81,15 +81,11 @@ fun TaskCreationScreen(
         FloatingActionButton(
             onClick = {
                 val selectedDate = datePickerState.selectedDateMillis
-                if(selectedDate != null)
-                {
-                    val formatter = SimpleDateFormat(datePattern, Locale.getDefault())
-                    val formattedDate = formatter.format(Date(selectedDate))
-
+                if (selectedDate != null) {
+                    val formattedDate = dateFormatter.format(Date(selectedDate))
                     date.value = formattedDate
 
-                    if (validateInputs())
-                    {
+                    if (validateInputs()) {
                         onTaskCreated(name.value, formattedDate)
                         navController.navigate("task_list") {
                             popUpTo("task_creation") {
@@ -97,8 +93,19 @@ fun TaskCreationScreen(
                             }
                         }
                     } else {
-                        Log.d("TaskCreationScreen", "Create Task button clicked but inputs are invalid or date is null")
-                        Log.d("Date", formattedDate)
+                        Log.d("TaskCreationScreen", "Create Task button clicked but inputs are invalid")
+                    }
+                } else {
+                    // If no date is selected, proceed with only task name
+                    if (validateInputs()) {
+                        onTaskCreated(name.value, null)
+                        navController.navigate("task_list") {
+                            popUpTo("task_creation") {
+                                inclusive = true
+                            }
+                        }
+                    } else {
+                        Log.d("TaskCreationScreen", "Create Task button clicked but inputs are invalid")
                     }
                 }
             },
@@ -124,7 +131,9 @@ fun TaskCreationScreen(
     }
 }
 
-fun isValidDate(dateString: String): Boolean {
+fun isValidDate(dateString: String?): Boolean {
+    if (dateString == null) return false
+
     return try {
         val formatter = SimpleDateFormat(datePattern, Locale.getDefault())
         formatter.parse(dateString)

@@ -1,6 +1,5 @@
 package com.example.todolistmultiplatform.android.views
 
-import TaskCreationScreen
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
@@ -41,7 +40,7 @@ fun NavGraph(
         composable("task_creation") {
             TaskCreationScreen(
                 navController = navController,
-                onTaskCreated = { name : String, date : String ->
+                onTaskCreated = { name: String, date: String? -> // Accept nullable String for date
                     val newTodoList = todoList.toMutableList()
                     val newId = getFreeId(newTodoList)
                     newTodoList.add(Todo(newId, name, date, false))

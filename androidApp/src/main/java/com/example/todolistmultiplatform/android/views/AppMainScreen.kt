@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
@@ -35,6 +36,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -49,7 +51,6 @@ import com.example.todolistmultiplatform.android.item.Todo
 import kotlin.math.abs
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppMainScreen(
     todoList: List<Todo>,
@@ -152,10 +153,12 @@ fun TodoItem(
     onDelete: () -> Unit,
     onCheckboxClicked: (Boolean) -> Unit
 ) {
-    var offsetX by remember { mutableStateOf(0f) }
+    var offsetX by remember { mutableFloatStateOf(0f) }
+    var isSwiped by remember { mutableStateOf(false) }
     var isConfirmVisible by remember { mutableStateOf(false) }
 
     val slidingThreshold = 50.dp
+    val startThreshold = 5.dp
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -169,21 +172,33 @@ fun TodoItem(
                 modifier = Modifier
                     .padding(16.dp)
                     .offset(offsetX.dp, 0.dp)
+            ) {
+                Column(modifier = Modifier
+                    .weight(1f)
                     .pointerInput(Unit) {
-                        detectDragGestures(onDragEnd = {
+                        detectDragGestures(onDragStart = {
+                            // Reset offsetX when starting to slide
+                            offsetX = 0f
+                        }, onDragEnd = {
                             if (abs(offsetX) > slidingThreshold.value) {
                                 isConfirmVisible = true
                             }
                             offsetX = 0f
+                            isSwiped = false
                         }) { _, dragAmount ->
-                            offsetX += dragAmount.x
+                            if (abs(dragAmount.x) > startThreshold.value) {
+                                offsetX += dragAmount.x
+                                isSwiped = offsetX != 0f
+                            }
                         }
                     }
-            ) {
-                Column(modifier = Modifier.weight(1f)) {
+                ) {
                     Text(text = todo.name, fontSize = 18.sp)
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = todo.date, fontSize = 14.sp)
+                    Text(
+                        text = todo.date ?: "No Date",
+                        fontSize = 14.sp
+                    )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = if (todo.isDone) "Done" else "Not Done",
@@ -197,9 +212,23 @@ fun TodoItem(
                     onCheckedChange = { isChecked ->
                         onCheckboxClicked(isChecked)
                     },
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier
+                        .size(24.dp)
                 )
             }
+        }
+
+        if (isSwiped) {
+            val iconModifier = Modifier
+                .padding(16.dp)
+                .align(if (offsetX > 0) Alignment.CenterStart else Alignment.CenterEnd)
+
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "Delete",
+                tint = Color.Red,
+                modifier = iconModifier
+            )
         }
 
         if (isConfirmVisible) {
@@ -235,17 +264,4 @@ fun TodoItem(
             }
         }
     }
-}
-
-
-
-
-
-
-@Composable
-fun Greeting(modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello!",
-        modifier = modifier
-    )
 }
