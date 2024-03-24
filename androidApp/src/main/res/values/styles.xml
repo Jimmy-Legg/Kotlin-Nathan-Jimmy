@@ -1,4 +1,7 @@
 <resources>
     <style name="AppTheme" parent="android:Theme.Material.NoActionBar"/>
     <string name="AppName">To do List</string>
+    <string name="all">All</string>
+    <string name="done">Done</string>
+    <string name="notDone">Not Done</string>
 </resources>

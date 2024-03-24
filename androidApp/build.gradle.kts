@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.constraintlayout)
     debugImplementation(libs.compose.ui.tooling)
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")

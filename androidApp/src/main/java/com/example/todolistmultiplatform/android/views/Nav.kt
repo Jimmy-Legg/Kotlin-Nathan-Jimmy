@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.example.todolistmultiplatform.android.enums.SortOption
 import com.example.todolistmultiplatform.android.item.Todo
 import com.example.todolistmultiplatform.android.utils.getFreeId
 
@@ -13,7 +14,9 @@ fun NavGraph(
     todoList: List<Todo>,
     onAddTodo: (List<Todo>) -> Unit,
     onDeleteTask: (Todo) -> Unit,
-    onCheckboxClicked: (Todo, Boolean) -> Unit // Add this parameter
+    onCheckboxClicked: (Todo, Boolean) -> Unit,
+    sortOption: SortOption,
+    onSortOptionSelected :  (SortOption) -> Unit
 ) {
     NavHost(navController = navController, startDestination = "task_list") {
         composable("task_list") {
@@ -23,7 +26,9 @@ fun NavGraph(
                     navController.navigate("task_creation")
                 },
                 onDeleteTask = onDeleteTask,
-                onCheckboxClicked = onCheckboxClicked // Pass down the callback
+                onCheckboxClicked = onCheckboxClicked,
+                sortOption = sortOption,
+                onSortOptionSelected = onSortOptionSelected
             )
         }
         composable("task_creation") {
