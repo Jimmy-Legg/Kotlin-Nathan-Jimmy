@@ -4,9 +4,12 @@ import TaskCreationScreen
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.example.todolistmultiplatform.android.enums.SortOption
 import com.example.todolistmultiplatform.android.item.Todo
 import com.example.todolistmultiplatform.android.utils.getFreeId
@@ -46,6 +49,16 @@ fun NavGraph(
                     navController.popBackStack()
                 }
             )
+        }
+        composable(
+            "congrats/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.IntType }),
+        ) { backStackEntry ->
+            val todoId = backStackEntry.arguments?.getInt("todoId")
+            val selectedTodo = remember { todoList.find { it.id == todoId } }
+            if (selectedTodo != null) {
+                CongratsScreen(navController = navController, backStackEntry = backStackEntry, todo = selectedTodo, onBackPressed = { navController.popBackStack() })
+            }
         }
     }
 }

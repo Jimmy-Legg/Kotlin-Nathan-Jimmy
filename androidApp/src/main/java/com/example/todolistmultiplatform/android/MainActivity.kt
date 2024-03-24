@@ -2,9 +2,11 @@ package com.example.todolistmultiplatform.android
 
 import JsonUtils.loadFile
 import JsonUtils.saveTodoList
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -24,6 +26,7 @@ class MainActivity : ComponentActivity() {
     private var sortOption by mutableStateOf(SortOption.All)
     private var filteredTodoList by mutableStateOf(emptyList<Todo>())
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,7 +45,12 @@ class MainActivity : ComponentActivity() {
                         todoList = filteredTodoList,
                         onAddTodo = { newTodoList -> updateTodoList(newTodoList) },
                         onDeleteTask = { deletedTodo -> deleteTask(deletedTodo) },
-                        onCheckboxClicked = { todo, isChecked -> updateTodoStatus(todo, isChecked) },
+                        onCheckboxClicked = { todo, isChecked ->
+                            if (isChecked) {
+                                navController.navigate("congrats/${todo.id}")
+                            }
+                            updateTodoStatus(todo, isChecked)
+                        },
                         sortOption,
                         onSortOptionSelected = { sortOption -> changeSortOption(sortOption) }
                     )

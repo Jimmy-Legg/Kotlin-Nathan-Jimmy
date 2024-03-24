@@ -66,6 +66,7 @@ fun TaskCreationScreen(
             isError = !isNameValid.value,
             modifier = Modifier.fillMaxWidth()
         )
+
         Spacer(modifier = Modifier.height(16.dp))
 
         DatePicker(
@@ -77,7 +78,6 @@ fun TaskCreationScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        //Validation Button
         FloatingActionButton(
             onClick = {
                 val selectedDate = datePickerState.selectedDateMillis
@@ -111,7 +111,6 @@ fun TaskCreationScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Back to Main Screen Button
         FloatingActionButton(
             onClick = {
                 navController.navigate("task_list")
