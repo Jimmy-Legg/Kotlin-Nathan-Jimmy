@@ -1,17 +1,47 @@
 package com.example.todolistmultiplatform.android.views
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.todolistmultiplatform.android.item.Todo
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import kotlin.math.abs
+
 
 @Composable
 fun AppMainScreen(
@@ -59,44 +89,100 @@ fun TodoList(todoList: List<Todo>, onDelete: (Todo) -> Unit, onCheckboxClicked: 
         }
     }
 }
-
 @Composable
-fun TodoItem(todo: Todo, onDelete: () -> Unit, onCheckboxClicked: (Boolean) -> Unit) {
-    Surface(
-        shape = RoundedCornerShape(8.dp),
+fun TodoItem(
+    todo: Todo,
+    onDelete: () -> Unit,
+    onCheckboxClicked: (Boolean) -> Unit
+) {
+    var offsetX by remember { mutableStateOf(0f) }
+    var isConfirmVisible by remember { mutableStateOf(false) }
+
+    val slidingThreshold = 50.dp
+
+    Box(
         modifier = Modifier.fillMaxWidth()
     ) {
-        Row(modifier = Modifier.padding(16.dp)) {
-            Column(modifier = Modifier.weight(1f)) {
-                Text(text = todo.name, style = MaterialTheme.typography.titleMedium)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(text = todo.date, style = MaterialTheme.typography.bodyMedium)
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = if (todo.isDone) "Done" else "Not Done",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = if (todo.isDone) Color.Green else Color.Red
+        Surface(
+            shape = RoundedCornerShape(8.dp),
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .padding(16.dp)
+                    .offset(offsetX.dp, 0.dp)
+                    .pointerInput(Unit) {
+                        detectDragGestures(onDragEnd = {
+                            if (abs(offsetX) > slidingThreshold.value) {
+                                isConfirmVisible = true
+                            }
+                            offsetX = 0f
+                        }) { _, dragAmount ->
+                            offsetX += dragAmount.x
+                        }
+                    }
+            ) {
+                Column(modifier = Modifier.weight(1f)) {
+                    Text(text = todo.name, fontSize = 18.sp)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(text = todo.date, fontSize = 14.sp)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        text = if (todo.isDone) "Done" else "Not Done",
+                        color = if (todo.isDone) Color.Green else Color.Red,
+                        fontSize = 14.sp
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+                Checkbox(
+                    checked = todo.isDone,
+                    onCheckedChange = { isChecked ->
+                        onCheckboxClicked(isChecked)
+                    },
+                    modifier = Modifier.size(24.dp)
                 )
             }
-            Spacer(modifier = Modifier.width(16.dp))
-            Checkbox(
-                checked = todo.isDone,
-                onCheckedChange = { isChecked ->
-                    onCheckboxClicked(isChecked)
-                },
-                modifier = Modifier.size(24.dp)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            FloatingActionButton(
-                onClick = onDelete,
-                modifier = Modifier.size(60.dp), // Set a smaller size for the button
-                content = {
-                    Text(text = "Delete")
+        }
+
+        if (isConfirmVisible) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.5f))
+                    .clickable { /* do nothing to prevent clicks from passing through */ },
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(25.dp)
+                ) {
+                    Button(
+                        onClick = {
+                            onDelete()
+                            isConfirmVisible = false
+                        }
+                    ) {
+                        Text(text = "Confirm")
+                    }
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Button(
+                        onClick = {
+                            isConfirmVisible = false
+                        }
+                    ) {
+                        Text(text = "Cancel")
+                    }
                 }
-            )
+            }
         }
     }
 }
+
+
+
+
 
 
 @Composable

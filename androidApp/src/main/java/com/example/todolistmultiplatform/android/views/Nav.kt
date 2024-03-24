@@ -12,7 +12,7 @@ fun NavGraph(
     todoList: List<Todo>,
     onAddTodo: (List<Todo>) -> Unit,
     onDeleteTask: (Todo) -> Unit,
-    onCheckboxClicked: (Todo, Boolean) -> Unit // Add this parameter
+    onCheckboxClicked: (Todo, Boolean) -> Unit
 ) {
     NavHost(navController = navController, startDestination = "task_list") {
         composable("task_list") {
@@ -22,7 +22,7 @@ fun NavGraph(
                     navController.navigate("task_creation")
                 },
                 onDeleteTask = onDeleteTask,
-                onCheckboxClicked = onCheckboxClicked // Pass down the callback
+                onCheckboxClicked = onCheckboxClicked
             )
         }
         composable("task_creation") {
