@@ -20,6 +20,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenuItem
@@ -153,9 +154,11 @@ fun TodoItem(
     onCheckboxClicked: (Boolean) -> Unit
 ) {
     var offsetX by remember { mutableStateOf(0f) }
+    var isSwiped by remember { mutableStateOf(false) }
     var isConfirmVisible by remember { mutableStateOf(false) }
 
     val slidingThreshold = 50.dp
+    val startThreshold = 5.dp
 
     Box(
         modifier = Modifier.fillMaxWidth()
@@ -170,20 +173,30 @@ fun TodoItem(
                     .padding(16.dp)
                     .offset(offsetX.dp, 0.dp)
                     .pointerInput(Unit) {
-                        detectDragGestures(onDragEnd = {
+                        detectDragGestures(onDragStart = {
+                            // Reset offsetX when starting to slide
+                            offsetX = 0f
+                        }, onDragEnd = {
                             if (abs(offsetX) > slidingThreshold.value) {
                                 isConfirmVisible = true
                             }
                             offsetX = 0f
+                            isSwiped = false // Reset isSwiped state
                         }) { _, dragAmount ->
-                            offsetX += dragAmount.x
+                            if (abs(dragAmount.x) > startThreshold.value) {
+                                offsetX += dragAmount.x
+                                isSwiped = offsetX != 0f
+                            }
                         }
                     }
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(text = todo.name, fontSize = 18.sp)
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text(text = todo.date, fontSize = 14.sp)
+                    Text(
+                        text = todo.date ?: "No Date",
+                        fontSize = 14.sp
+                    )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = if (todo.isDone) "Done" else "Not Done",
@@ -200,6 +213,19 @@ fun TodoItem(
                     modifier = Modifier.size(24.dp)
                 )
             }
+        }
+
+        if (isSwiped) {
+            val iconModifier = Modifier
+                .padding(16.dp)
+                .align(if (offsetX > 0) Alignment.CenterStart else Alignment.CenterEnd)
+
+            Icon(
+                imageVector = Icons.Default.Delete,
+                contentDescription = "Delete",
+                tint = Color.Red,
+                modifier = iconModifier
+            )
         }
 
         if (isConfirmVisible) {
@@ -235,17 +261,4 @@ fun TodoItem(
             }
         }
     }
-}
-
-
-
-
-
-
-@Composable
-fun Greeting(modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello!",
-        modifier = modifier
-    )
 }
