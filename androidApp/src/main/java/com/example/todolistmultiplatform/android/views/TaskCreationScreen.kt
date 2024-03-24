@@ -41,6 +41,7 @@ fun TaskCreationScreen(navController: NavHostController, onTaskCreated: (name : 
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        //Task name
         TextField(
             value = name.value,
             onValueChange = { name.value = it },
@@ -50,6 +51,7 @@ fun TaskCreationScreen(navController: NavHostController, onTaskCreated: (name : 
         )
         Spacer(modifier = Modifier.height(16.dp))
 
+        //Needs to be replaced
         TextField(
             value = date.value,
             onValueChange = { date.value = it },
@@ -59,6 +61,7 @@ fun TaskCreationScreen(navController: NavHostController, onTaskCreated: (name : 
         )
         Spacer(modifier = Modifier.height(16.dp))
 
+        //Validation Button
         FloatingActionButton(
             onClick = {
                 if (validateInputs()) {
@@ -77,7 +80,7 @@ fun TaskCreationScreen(navController: NavHostController, onTaskCreated: (name : 
             }
         )
 
-        Spacer(modifier = Modifier.height(8.dp)) // Adding a smaller spacer
+        Spacer(modifier = Modifier.height(8.dp))
 
         // Back to Main Screen Button
         FloatingActionButton(
