@@ -1,5 +1,8 @@
 package com.example.todolistmultiplatform.android.views
 
+import TaskCreationScreen
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -8,6 +11,7 @@ import com.example.todolistmultiplatform.android.enums.SortOption
 import com.example.todolistmultiplatform.android.item.Todo
 import com.example.todolistmultiplatform.android.utils.getFreeId
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun NavGraph(
     navController: NavHostController,
