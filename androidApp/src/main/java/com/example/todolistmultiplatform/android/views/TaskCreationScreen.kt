@@ -59,6 +59,7 @@ fun TaskCreationScreen(
             .fillMaxSize()
             .padding(16.dp)
     ) {
+        TopBarApp(navController = navController, pageName = "Create")
         TextField(
             value = name.value,
             onValueChange = { name.value = it },
@@ -113,19 +114,6 @@ fun TaskCreationScreen(
             contentColor = MaterialTheme.colorScheme.inversePrimary,
             content = {
                 Text("Create Task", color = MaterialTheme.colorScheme.primary)
-            }
-        )
-
-        Spacer(modifier = Modifier.height(8.dp))
-
-        FloatingActionButton(
-            onClick = {
-                navController.navigate("task_list")
-            },
-            modifier = Modifier.fillMaxWidth(),
-            contentColor = MaterialTheme.colorScheme.inversePrimary,
-            content = {
-                Text("Back to Main Screen", color = MaterialTheme.colorScheme.primary)
             }
         )
     }

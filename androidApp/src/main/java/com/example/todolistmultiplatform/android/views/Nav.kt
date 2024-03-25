@@ -34,9 +34,33 @@ fun NavGraph(
                 onDeleteTask = onDeleteTask,
                 onCheckboxClicked = onCheckboxClicked,
                 sortOption = sortOption,
-                onSortOptionSelected = onSortOptionSelected
+                onSortOptionSelected = onSortOptionSelected,
+                onModifyTodo = { todo ->
+                    navController.navigate("modify_todo/${todo.id}")
+                }
             )
         }
+        composable(
+            "modify_todo/{todoId}",
+            arguments = listOf(navArgument("todoId") { type = NavType.IntType }),
+        ) { backStackEntry ->
+            val todoId = backStackEntry.arguments?.getInt("todoId")
+            val selectedTodo = remember { todoList.find { it.id == todoId } }
+            if (selectedTodo != null) {
+                ModifyTodoItemScreen(
+                    navController = navController,
+                    todo = selectedTodo,
+                    onModify = { modifiedTodo ->
+                        val modifiedList = todoList.map {
+                            if (it.id == modifiedTodo.id) modifiedTodo else it
+                        }
+                        onAddTodo(modifiedList)
+                    },
+                    onBack = { navController.popBackStack() }
+                )
+            }
+        }
+
         composable("task_creation") {
             TaskCreationScreen(
                 navController = navController,

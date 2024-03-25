@@ -61,7 +61,8 @@ fun AppMainScreen(
     onDeleteTask: (Todo) -> Unit,
     onCheckboxClicked: (Todo, Boolean) -> Unit,
     sortOption: SortOption,
-    onSortOptionSelected: (SortOption) -> Unit
+    onSortOptionSelected: (SortOption) -> Unit,
+    onModifyTodo: (Todo) -> Unit
 ) {
     val backgroundColor = MaterialTheme.colorScheme.background
     val contentColor = contentColorFor(backgroundColor)
@@ -74,13 +75,12 @@ fun AppMainScreen(
                 modifier = Modifier.padding(bottom = 16.dp).fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Box(modifier = Modifier.weight(1f)) {
-                TodoList(
-                    todoList = todoList,
-                    onDelete = onDeleteTask,
-                    onCheckboxClicked = onCheckboxClicked
-                )
-            }
+            TodoList(
+                todoList = todoList,
+                onDelete = onDeleteTask,
+                onCheckboxClicked = onCheckboxClicked,
+                onModify = onModifyTodo
+            )
             Spacer(modifier = Modifier.height(16.dp))
             FloatingActionButton(
                 onClick = { onNavigateToTaskCreation() },
@@ -139,13 +139,19 @@ fun SortDropdownMenu(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TodoList(todoList: List<Todo>, onDelete: (Todo) -> Unit, onCheckboxClicked: (Todo, Boolean) -> Unit) {
+fun TodoList(
+    todoList: List<Todo>,
+    onDelete: (Todo) -> Unit,
+    onCheckboxClicked: (Todo, Boolean) -> Unit,
+    onModify: (Todo) -> Unit // New parameter to handle modify action
+) {
     LazyColumn {
         items(todoList) { todo ->
             TodoItem(
                 todo = todo,
                 onDelete = { onDelete(todo) },
-                onCheckboxClicked = { isChecked -> onCheckboxClicked(todo, isChecked) }
+                onCheckboxClicked = { isChecked -> onCheckboxClicked(todo, isChecked) },
+                onModify = { onModify(todo) }
             )
             Spacer(modifier = Modifier.height(8.dp))
         }
@@ -156,18 +162,20 @@ fun TodoList(todoList: List<Todo>, onDelete: (Todo) -> Unit, onCheckboxClicked: 
 fun TodoItem(
     todo: Todo,
     onDelete: () -> Unit,
-    onCheckboxClicked: (Boolean) -> Unit
+    onCheckboxClicked: (Boolean) -> Unit,
+    onModify: () -> Unit
 ) {
+    val slidingSpeedFactor = 0.3f
     var offsetX by remember { mutableFloatStateOf(0f) }
     var isSwiped by remember { mutableStateOf(false) }
     var isConfirmVisible by remember { mutableStateOf(false) }
 
-    val slidingThreshold = 50.dp
-    val startThreshold = 5.dp
+    val slidingThreshold = 75.dp
+    val startThreshold = 0.dp
 
     val overdue = todo.isOverdue()
     Box(
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier.fillMaxWidth().clickable { onModify() }
     ) {
         Surface(
             shape = RoundedCornerShape(8.dp),
@@ -191,9 +199,13 @@ fun TodoItem(
                             }
                             offsetX = 0f
                             isSwiped = false
-                        }) { _, dragAmount ->
-                            if (abs(dragAmount.x) > startThreshold.value) {
-                                offsetX += dragAmount.x
+                        }) { change, dragAmount ->
+                            val horizontalDrag = abs(dragAmount.x)
+                            val verticalDrag = abs(dragAmount.y)
+
+                            // Only consider horizontal drag
+                            if (horizontalDrag > verticalDrag && horizontalDrag > startThreshold.value) {
+                                offsetX += dragAmount.x * slidingSpeedFactor // Adjust sliding speed
                                 isSwiped = offsetX != 0f
                             }
                         }
@@ -238,10 +250,12 @@ fun TodoItem(
                 .padding(16.dp)
                 .align(if (offsetX > 0) Alignment.CenterStart else Alignment.CenterEnd)
 
+            val iconColor = if (abs(offsetX) > slidingThreshold.value) Color.Red else Color.Black
+
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Delete",
-                tint = Color.Red,
+                tint = iconColor,
                 modifier = iconModifier
             )
         }
