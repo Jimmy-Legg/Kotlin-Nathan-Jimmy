@@ -1,20 +1,17 @@
 package com.example.todolistmultiplatform.android.item
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import com.google.gson.annotations.SerializedName
 import java.text.ParseException
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
 data class Todo(
-        @SerializedName("id") val id : Int,
+        @SerializedName("id") val id: Int,
         @SerializedName("name") val name: String,
         @SerializedName("date") val date: String?,
-        @SerializedName("isDone") val isDone: Boolean,
+        @SerializedName("isDone") val isDone: Boolean
 ) {
         fun isOverdue(): Boolean {
                 if (date == null) return false
@@ -22,8 +19,13 @@ data class Todo(
                 val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                 try {
                         val todoDate = formatter.parse(date)
-                        val currentDate = Date()
-                        return todoDate.before(currentDate)
+
+                        // Add one day to the current date
+                        val calendar = Calendar.getInstance()
+                        calendar.time = Date()
+                        calendar.add(Calendar.DAY_OF_YEAR, -1)
+                        val currentDatePlusOneDay = calendar.time
+                        return todoDate.before(currentDatePlusOneDay)
                 } catch (e: ParseException) {
                         e.printStackTrace()
                         return false

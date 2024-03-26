@@ -49,7 +49,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.constraintlayout)
     debugImplementation(libs.compose.ui.tooling)
-
+    implementation ("androidx.work:work-runtime-ktx:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.0")
     implementation("com.google.code.gson:gson:2.8.8")
 }

@@ -18,6 +18,7 @@ import com.example.todolistmultiplatform.android.utils.getFreeId
 fun NavGraph(
     navController: NavHostController,
     todoList: List<Todo>,
+    filteredTodoList: List<Todo>,
     onAddTodo: (List<Todo>) -> Unit,
     onDeleteTask: (Todo) -> Unit,
     onCheckboxClicked: (Todo, Boolean) -> Unit,
@@ -28,6 +29,7 @@ fun NavGraph(
         composable("task_list") {
             AppMainScreen(
                 todoList = todoList,
+                filteredTodoList = filteredTodoList,
                 onNavigateToTaskCreation = {
                     navController.navigate("task_creation")
                 },

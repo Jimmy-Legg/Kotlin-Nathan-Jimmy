@@ -42,7 +42,8 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     NavGraph(
                         navController = navController,
-                        todoList = filteredTodoList,
+                        todoList = todoList,
+                        filteredTodoList = filteredTodoList,
                         onAddTodo = { newTodoList -> updateTodoList(newTodoList) },
                         onDeleteTask = { deletedTodo -> deleteTask(deletedTodo) },
                         onCheckboxClicked = { todo, isChecked ->
