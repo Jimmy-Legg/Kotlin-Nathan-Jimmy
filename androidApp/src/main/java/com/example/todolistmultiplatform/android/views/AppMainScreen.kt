@@ -108,7 +108,6 @@ fun AppMainScreen(
 fun checkForOverdueTasksAndNotify(context: Context, todoList: List<Todo>) {
     val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    // Create the notification channel
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
         val name = "Todo Notifications"
         val descriptionText = "Channel for todo notifications"
@@ -119,7 +118,6 @@ fun checkForOverdueTasksAndNotify(context: Context, todoList: List<Todo>) {
         notificationManager.createNotificationChannel(channel)
     }
 
-    // Check for overdue tasks
     val currentDate = LocalDate.now()
 
     todoList.forEach { todo ->
@@ -127,9 +125,7 @@ fun checkForOverdueTasksAndNotify(context: Context, todoList: List<Todo>) {
             val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
             val todoDate = LocalDate.parse(todo.date, formatter)
 
-            // Compare todo date to current date
             if (todoDate.isBefore(currentDate) || todoDate == currentDate) {
-                // Todo item is overdue or due today
                 val daysUntilDue = ChronoUnit.DAYS.between(currentDate, todoDate).toInt()
                 val notificationMessage = when {
                     daysUntilDue < 0 -> "Overdue by ${-daysUntilDue} days"
@@ -137,7 +133,6 @@ fun checkForOverdueTasksAndNotify(context: Context, todoList: List<Todo>) {
                     else -> "Due in $daysUntilDue days"
                 }
 
-                // Send notification
                 val notification = Notification.Builder(context, "todo_channel")
                     .setContentTitle("Task Due Soon")
                     .setContentText("${todo.name}: $notificationMessage")
@@ -145,7 +140,6 @@ fun checkForOverdueTasksAndNotify(context: Context, todoList: List<Todo>) {
                     .build()
                 notificationManager.notify(todo.id, notification)
             } else if (todoDate.minusDays(1) == currentDate) {
-                // Todo item is due in one day
                 val notification = Notification.Builder(context, "todo_channel")
                     .setContentTitle("Task Due Soon")
                     .setContentText("${todo.name}: Due in 1 day")

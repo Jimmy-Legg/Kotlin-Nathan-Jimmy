@@ -14,16 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavHostController
 import com.example.todolistmultiplatform.android.item.Todo
 import com.example.todolistmultiplatform.android.particles.ControlledExplosion
 
 
 @Composable
 fun CongratsScreen(
-    navController: NavHostController,
-    backStackEntry: NavBackStackEntry,
     todo: Todo,
     onBackPressed: () -> Unit
 ) {

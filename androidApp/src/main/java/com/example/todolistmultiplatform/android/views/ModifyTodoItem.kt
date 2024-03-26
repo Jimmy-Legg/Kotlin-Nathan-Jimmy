@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -18,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.todolistmultiplatform.android.item.Todo
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModifyTodoItemScreen(
     navController: NavHostController,
@@ -30,7 +28,6 @@ fun ModifyTodoItemScreen(
     var newDate by remember { mutableStateOf(todo.date ?: "") }
 
     Column {
-        // Add a TopAppBar with a navigation icon (back button)
         TopBarApp(navController = navController, pageName = "Modify")
         TextField(
             value = newName,

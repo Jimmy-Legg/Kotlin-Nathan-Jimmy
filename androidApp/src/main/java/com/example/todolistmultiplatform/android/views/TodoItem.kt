@@ -91,7 +91,7 @@ fun TodoItem(
 
                             // Only consider horizontal drag
                             if (horizontalDrag > verticalDrag && horizontalDrag > startThreshold.value) {
-                                offsetX += dragAmount.x * slidingSpeedFactor // Adjust sliding speed
+                                offsetX += dragAmount.x * slidingSpeedFactor
                                 isSwiped = offsetX != 0f
                             }
                         }
@@ -99,10 +99,20 @@ fun TodoItem(
                 ) {
                     Text(text = todo.name, fontSize = 18.sp)
                     Spacer(modifier = Modifier.height(4.dp))
+                    if (todo.description?.isNotBlank() == true) {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        todo.description?.let {
+                            Text(
+                                text = it,
+                                fontSize = 14.sp
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = todo.date ?: "No Date",
                         fontSize = 14.sp,
-                        color = if (overdue) Color.Red else Color.Black
+                        color = if (overdue) Color.Red else Color.Unspecified
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
@@ -114,7 +124,7 @@ fun TodoItem(
                         color = when {
                             overdue && !todo.isDone -> Color.Red
                             todo.isDone -> Color.Green
-                            else -> Color.Black
+                            else -> Color.Unspecified
                         },
                         fontSize = 14.sp
                     )

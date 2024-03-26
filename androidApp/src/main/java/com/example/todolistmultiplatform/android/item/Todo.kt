@@ -10,6 +10,7 @@ import java.util.Locale
 data class Todo(
         @SerializedName("id") val id: Int,
         @SerializedName("name") val name: String,
+        @SerializedName("description") val description: String?,
         @SerializedName("date") val date: String?,
         @SerializedName("isDone") val isDone: Boolean
 ) {

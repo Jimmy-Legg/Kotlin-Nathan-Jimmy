@@ -17,7 +17,7 @@ fun TodoList(
     todoList: List<Todo>,
     onDelete: (Todo) -> Unit,
     onCheckboxClicked: (Todo, Boolean) -> Unit,
-    onModify: (Todo) -> Unit // New parameter to handle modify action
+    onModify: (Todo) -> Unit
 ) {
     LazyColumn {
         items(todoList) { todo ->

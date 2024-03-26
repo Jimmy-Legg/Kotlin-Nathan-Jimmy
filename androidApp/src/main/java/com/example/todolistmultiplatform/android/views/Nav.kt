@@ -66,10 +66,10 @@ fun NavGraph(
         composable("task_creation") {
             TaskCreationScreen(
                 navController = navController,
-                onTaskCreated = { name: String, date: String? -> // Accept nullable String for date
+                onTaskCreated = { name: String, description: String?, date: String? ->
                     val newTodoList = todoList.toMutableList()
                     val newId = getFreeId(newTodoList)
-                    newTodoList.add(Todo(newId, name, date, false))
+                    newTodoList.add(Todo(newId, name, description, date, false))
                     onAddTodo(newTodoList)
                     navController.popBackStack()
                 }
@@ -82,7 +82,9 @@ fun NavGraph(
             val todoId = backStackEntry.arguments?.getInt("todoId")
             val selectedTodo = remember { todoList.find { it.id == todoId } }
             if (selectedTodo != null) {
-                CongratsScreen(navController = navController, backStackEntry = backStackEntry, todo = selectedTodo, onBackPressed = { navController.popBackStack() })
+                CongratsScreen(
+                    todo = selectedTodo
+                ) { navController.popBackStack() }
             }
         }
     }

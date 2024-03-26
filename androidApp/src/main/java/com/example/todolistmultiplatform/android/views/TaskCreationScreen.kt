@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,11 +37,12 @@ var datePattern = "dd/MM/yyyy"
 @Composable
 fun TaskCreationScreen(
     navController: NavHostController,
-    onTaskCreated: (name: String, date: String?) -> Unit // Date is now nullable
+    onTaskCreated: (name: String,description: String?, date: String?) -> Unit
 ) {
 
     val name = remember { mutableStateOf("") }
-    val date = remember { mutableStateOf<String?>(null) } // Date is now nullable
+    val description = remember { mutableStateOf("") }
+    val date = remember { mutableStateOf<String?>(null) }
 
     val isNameValid = remember { mutableStateOf(true) }
     val isDateValid = remember { mutableStateOf(true) }
@@ -58,6 +61,8 @@ fun TaskCreationScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
+            .verticalScroll(
+                rememberScrollState())
     ) {
         TopBarApp(navController = navController, pageName = "Create")
         TextField(
@@ -65,6 +70,15 @@ fun TaskCreationScreen(
             onValueChange = { name.value = it },
             label = { Text("Task Name") },
             isError = !isNameValid.value,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextField(
+            value = description.value,
+            onValueChange = { description.value = it },
+            label = { Text("Task Description") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -82,32 +96,20 @@ fun TaskCreationScreen(
         FloatingActionButton(
             onClick = {
                 val selectedDate = datePickerState.selectedDateMillis
-                if (selectedDate != null) {
-                    val formattedDate = dateFormatter.format(Date(selectedDate))
-                    date.value = formattedDate
+                val formattedDate = if (selectedDate != null) dateFormatter.format(Date(selectedDate)) else null
 
-                    if (validateInputs()) {
-                        onTaskCreated(name.value, formattedDate)
-                        navController.navigate("task_list") {
-                            popUpTo("task_creation") {
-                                inclusive = true
-                            }
+                if (validateInputs()) {
+                    val descriptionToUse = description.value.ifBlank { null }
+                    val dateToUse = formattedDate ?: SimpleDateFormat(datePattern, Locale.getDefault()).format(Date())
+
+                    onTaskCreated(name.value, descriptionToUse, dateToUse)
+                    navController.navigate("task_list") {
+                        popUpTo("task_creation") {
+                            inclusive = true
                         }
-                    } else {
-                        Log.d("TaskCreationScreen", "Create Task button clicked but inputs are invalid")
                     }
                 } else {
-                    // If no date is selected, proceed with only task name
-                    if (validateInputs()) {
-                        onTaskCreated(name.value, null)
-                        navController.navigate("task_list") {
-                            popUpTo("task_creation") {
-                                inclusive = true
-                            }
-                        }
-                    } else {
-                        Log.d("TaskCreationScreen", "Create Task button clicked but inputs are invalid")
-                    }
+                    Log.d("TaskCreationScreen", "Create Task button clicked but inputs are invalid")
                 }
             },
             modifier = Modifier.fillMaxWidth(),
