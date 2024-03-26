@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -85,7 +86,7 @@ fun TodoItem(
                             }
                             offsetX = 0f
                             isSwiped = false
-                        }) { change, dragAmount ->
+                        }) { _, dragAmount ->
                             val horizontalDrag = abs(dragAmount.x)
                             val verticalDrag = abs(dragAmount.y)
 
@@ -101,12 +102,10 @@ fun TodoItem(
                     Spacer(modifier = Modifier.height(4.dp))
                     if (todo.description?.isNotBlank() == true) {
                         Spacer(modifier = Modifier.height(4.dp))
-                        todo.description?.let {
-                            Text(
-                                text = it,
+                        Text(
+                                text = todo.description,
                                 fontSize = 14.sp
                             )
-                        }
                     }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
@@ -146,8 +145,7 @@ fun TodoItem(
                 .padding(16.dp)
                 .align(if (offsetX > 0) Alignment.CenterStart else Alignment.CenterEnd)
 
-            val iconColor = if (abs(offsetX) > slidingThreshold.value) Color.Red else Color.Black
-
+            val iconColor = if (abs(offsetX) > slidingThreshold.value) Color.Red.copy(red = 1f, green = 0.2f, blue = 0.2f) else MaterialTheme.colorScheme.onBackground
             Icon(
                 imageVector = Icons.Default.Delete,
                 contentDescription = "Delete",
