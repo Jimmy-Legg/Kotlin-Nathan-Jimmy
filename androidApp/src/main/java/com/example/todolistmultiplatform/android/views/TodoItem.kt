@@ -101,7 +101,8 @@ fun TodoItem(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = todo.date ?: "No Date",
-                        fontSize = 14.sp
+                        fontSize = 14.sp,
+                        color = if (overdue) Color.Red else Color.Black
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
@@ -113,7 +114,7 @@ fun TodoItem(
                         color = when {
                             overdue && !todo.isDone -> Color.Red
                             todo.isDone -> Color.Green
-                            else -> Color.Unspecified
+                            else -> Color.Black
                         },
                         fontSize = 14.sp
                     )
