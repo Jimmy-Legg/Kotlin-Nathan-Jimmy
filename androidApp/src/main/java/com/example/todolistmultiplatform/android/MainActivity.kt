@@ -78,10 +78,10 @@ class MainActivity : ComponentActivity() {
 
     private fun updateTodoListUI(newTodoList: List<Todo>) {
         filteredTodoList = when (sortOption) {
-            SortOption.All -> todoList.sortedBy { it.date }
-            SortOption.Done -> todoList.filter { it.isDone }.sortedBy { it.date }
-            SortOption.NotDone -> todoList.filterNot { it.isDone }.sortedBy { it.date }
-            SortOption.Overdue -> todoList.filter { it.isOverdue() }.sortedBy { it.date }
+            SortOption.All -> todoList.sortedBy { it.date ?: "" }
+            SortOption.Done -> todoList.filter { it.isDone }.sortedBy { it.date ?: "" }
+            SortOption.NotDone -> todoList.filterNot { it.isDone }.sortedBy { it.date ?: "" }
+            SortOption.Overdue -> todoList.filter { it.isOverdue() }.sortedBy { it.date ?: "" }
         }
     }
 

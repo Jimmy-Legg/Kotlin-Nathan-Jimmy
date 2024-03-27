@@ -95,20 +95,23 @@ fun TaskCreationScreen(
 
         FloatingActionButton(
             onClick = {
-                val selectedDate = datePickerState.selectedDateMillis
-                val formattedDate = if (selectedDate != null) dateFormatter.format(Date(selectedDate)) else null
-
-                if (validateInputs()) {
+                if (validateInputs())
+                {
+                    val selectedDate = datePickerState.selectedDateMillis
+                    val formattedDate = if (selectedDate != null) dateFormatter.format(Date(selectedDate)) else null
                     val descriptionToUse = description.value.ifBlank { null }
-                    val dateToUse = formattedDate ?: SimpleDateFormat(datePattern, Locale.getDefault()).format(Date())
 
-                    onTaskCreated(name.value, descriptionToUse, dateToUse)
-                    navController.navigate("task_list") {
-                        popUpTo("task_creation") {
+                    onTaskCreated(name.value, descriptionToUse, formattedDate)
+                    navController.navigate("task_list")
+                    {
+                        popUpTo("task_creation")
+                        {
                             inclusive = true
                         }
                     }
-                } else {
+                }
+                else
+                {
                     Log.d("TaskCreationScreen", "Create Task button clicked but inputs are invalid")
                 }
             },

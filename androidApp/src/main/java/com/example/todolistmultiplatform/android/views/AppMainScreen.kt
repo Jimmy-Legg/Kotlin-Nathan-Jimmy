@@ -108,7 +108,8 @@ fun AppMainScreen(
 fun checkForOverdueTasksAndNotify(context: Context, todoList: List<Todo>) {
     val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+    {
         val name = "Todo Notifications"
         val descriptionText = "Channel for todo notifications"
         val importance = NotificationManager.IMPORTANCE_DEFAULT
@@ -120,35 +121,46 @@ fun checkForOverdueTasksAndNotify(context: Context, todoList: List<Todo>) {
 
     val currentDate = LocalDate.now()
 
-    todoList.forEach { todo ->
-        try {
-            val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
-            val todoDate = LocalDate.parse(todo.date, formatter)
+    todoList.forEach{ todo ->
+        if (todo.date != null) {
+            try
+            {
+                val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+                val todoDate = LocalDate.parse(todo.date, formatter)
 
-            if (todoDate.isBefore(currentDate) || todoDate == currentDate) {
-                val daysUntilDue = ChronoUnit.DAYS.between(currentDate, todoDate).toInt()
-                val notificationMessage = when {
-                    daysUntilDue < 0 -> "Overdue by ${-daysUntilDue} days"
-                    daysUntilDue == 0 -> "Due today"
-                    else -> "Due in $daysUntilDue days"
+                if (todoDate.isBefore(currentDate) || todoDate == currentDate)
+                {
+                    val daysUntilDue = ChronoUnit.DAYS.between(currentDate, todoDate).toInt()
+                    val notificationMessage = when
+                    {
+                        daysUntilDue < 0 -> "Overdue by ${-daysUntilDue} days"
+                        daysUntilDue == 0 -> "Due today"
+                        else -> "Due in $daysUntilDue days"
+                    }
+
+                    val notification = Notification.Builder(context, "todo_channel")
+                        .setContentTitle("Task Due Soon")
+                        .setContentText("${todo.name}: $notificationMessage")
+                        .setSmallIcon(android.R.drawable.ic_dialog_alert)
+                        .build()
+
+                    notificationManager.notify(todo.id, notification)
+
                 }
-
-                val notification = Notification.Builder(context, "todo_channel")
-                    .setContentTitle("Task Due Soon")
-                    .setContentText("${todo.name}: $notificationMessage")
-                    .setSmallIcon(android.R.drawable.ic_dialog_alert)
-                    .build()
-                notificationManager.notify(todo.id, notification)
-            } else if (todoDate.minusDays(1) == currentDate) {
-                val notification = Notification.Builder(context, "todo_channel")
-                    .setContentTitle("Task Due Soon")
-                    .setContentText("${todo.name}: Due in 1 day")
-                    .setSmallIcon(android.R.drawable.ic_dialog_alert)
-                    .build()
-                notificationManager.notify(todo.id, notification)
+                else if (todoDate.minusDays(1) == currentDate)
+                {
+                    val notification = Notification.Builder(context, "todo_channel")
+                        .setContentTitle("Task Due Soon")
+                        .setContentText("${todo.name}: Due in 1 day")
+                        .setSmallIcon(android.R.drawable.ic_dialog_alert)
+                        .build()
+                    notificationManager.notify(todo.id, notification)
+                }
             }
-        } catch (e: DateTimeParseException) {
-            e.printStackTrace()
+            catch (e: DateTimeParseException)
+            {
+                e.printStackTrace()
+            }
         }
     }
 }
