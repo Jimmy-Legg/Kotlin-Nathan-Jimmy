@@ -58,11 +58,7 @@ fun TaskCreationScreen(
     val dateFormatter = SimpleDateFormat(datePattern, Locale.getDefault())
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(16.dp)
-            .verticalScroll(
-                rememberScrollState())
+        modifier = Modifier.fillMaxSize().padding(8.dp).verticalScroll(rememberScrollState())
     ) {
         TopBarApp(navController = navController, pageName = "Create")
         TextField(
@@ -73,7 +69,7 @@ fun TaskCreationScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         TextField(
             value = description.value,
@@ -82,7 +78,7 @@ fun TaskCreationScreen(
             modifier = Modifier.fillMaxWidth()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         DatePicker(
             state = datePickerState,
@@ -91,7 +87,7 @@ fun TaskCreationScreen(
             colors = DatePickerDefaults.colors()
         )
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(8.dp))
 
         FloatingActionButton(
             onClick = {
