@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
 
     private var todoList by mutableStateOf(emptyList<Todo>())
 
-    private var sortOption by mutableStateOf(SortOption.All)
+    private var sortOption by mutableStateOf(SortOption.Tous)
     private var filteredTodoList by mutableStateOf(emptyList<Todo>())
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -78,10 +78,10 @@ class MainActivity : ComponentActivity() {
 
     private fun updateTodoListUI(newTodoList: List<Todo>) {
         filteredTodoList = when (sortOption) {
-            SortOption.All -> todoList.sortedBy { it.date ?: "" }
-            SortOption.Done -> todoList.filter { it.isDone }.sortedBy { it.date ?: "" }
-            SortOption.NotDone -> todoList.filterNot { it.isDone }.sortedBy { it.date ?: "" }
-            SortOption.Overdue -> todoList.filter { it.isOverdue() }.sortedBy { it.date ?: "" }
+            SortOption.Tous -> todoList.sortedBy { it.date ?: "" }
+            SortOption.Fait -> todoList.filter { it.isDone }.sortedBy { it.date ?: "" }
+            SortOption.PasFait -> todoList.filterNot { it.isDone }.sortedBy { it.date ?: "" }
+            SortOption.Dépassé -> todoList.filter { it.isOverdue() }.sortedBy { it.date ?: "" }
         }
     }
 

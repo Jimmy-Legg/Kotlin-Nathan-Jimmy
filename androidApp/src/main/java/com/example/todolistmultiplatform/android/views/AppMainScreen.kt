@@ -79,7 +79,7 @@ fun AppMainScreen(
             Box(modifier = Modifier.height(IntrinsicSize.Min)) {
                 Column {
                     Text(
-                        text = "Unfinished tasks: $unfinishedTasksCount",
+                        text = "Nombre de taches non fini : $unfinishedTasksCount",
                         modifier = Modifier.padding(top = 10.dp, bottom = 4.dp)
                     )
 
@@ -110,8 +110,8 @@ fun checkForOverdueTasksAndNotify(context: Context, todoList: List<Todo>) {
 
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
     {
-        val name = "Todo Notifications"
-        val descriptionText = "Channel for todo notifications"
+        val name = "Notifications"
+        val descriptionText = "Canal pour les notifications de tâches"
         val importance = NotificationManager.IMPORTANCE_DEFAULT
         val channel = NotificationChannel("todo_channel", name, importance).apply {
             description = descriptionText
@@ -133,13 +133,13 @@ fun checkForOverdueTasksAndNotify(context: Context, todoList: List<Todo>) {
                     val daysUntilDue = ChronoUnit.DAYS.between(currentDate, todoDate).toInt()
                     val notificationMessage = when
                     {
-                        daysUntilDue < 0 -> "Overdue by ${-daysUntilDue} days"
-                        daysUntilDue == 0 -> "Due today"
-                        else -> "Due in $daysUntilDue days"
+                        daysUntilDue < 0 -> "En retard de ${-daysUntilDue} jours"
+                        daysUntilDue == 0 -> "À rendre aujourd'hui"
+                        else -> "Due dans $daysUntilDue jours"
                     }
 
                     val notification = Notification.Builder(context, "todo_channel")
-                        .setContentTitle("Task Due Soon")
+                        .setContentTitle("Tâche à échéance courte")
                         .setContentText("${todo.name}: $notificationMessage")
                         .setSmallIcon(android.R.drawable.ic_dialog_alert)
                         .build()
@@ -150,8 +150,8 @@ fun checkForOverdueTasksAndNotify(context: Context, todoList: List<Todo>) {
                 else if (todoDate.minusDays(1) == currentDate)
                 {
                     val notification = Notification.Builder(context, "todo_channel")
-                        .setContentTitle("Task Due Soon")
-                        .setContentText("${todo.name}: Due in 1 day")
+                        .setContentTitle("Tâche à échéance courte")
+                        .setContentText("${todo.name}: À rendre demain")
                         .setSmallIcon(android.R.drawable.ic_dialog_alert)
                         .build()
                     notificationManager.notify(todo.id, notification)

@@ -50,14 +50,14 @@ fun ModifyTodoItemScreen(
         TextField(
             value = newName,
             onValueChange = { newName = it },
-            label = { Text("Todo Name") },
+            label = { Text("Nom de la tache") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
         TextField(
             value = newDescription,
             onValueChange = { newDescription = it },
-            label = { Text("Todo Date") },
+            label = { Text("Date") },
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.height(8.dp))
@@ -79,7 +79,7 @@ fun ModifyTodoItemScreen(
             modifier = Modifier.fillMaxWidth(),
             contentColor = MaterialTheme.colorScheme.inversePrimary,
             content = {
-                Text("Modify Todo", color = MaterialTheme.colorScheme.primary)
+                Text("Modifier la tâche", color = MaterialTheme.colorScheme.primary)
             }
         )
     }

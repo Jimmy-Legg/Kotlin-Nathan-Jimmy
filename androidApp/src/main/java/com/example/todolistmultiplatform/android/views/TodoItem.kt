@@ -78,7 +78,6 @@ fun TodoItem(
                     .weight(1f)
                     .pointerInput(Unit) {
                         detectDragGestures(onDragStart = {
-                            // Reset offsetX when starting to slide
                             offsetX = 0f
                         }, onDragEnd = {
                             if (abs(offsetX) > slidingThreshold.value) {
@@ -90,7 +89,6 @@ fun TodoItem(
                             val horizontalDrag = abs(dragAmount.x)
                             val verticalDrag = abs(dragAmount.y)
 
-                            // Only consider horizontal drag
                             if (horizontalDrag > verticalDrag && horizontalDrag > startThreshold.value) {
                                 offsetX += dragAmount.x * slidingSpeedFactor
                                 isSwiped = offsetX != 0f
@@ -100,25 +98,29 @@ fun TodoItem(
                 ) {
                     Text(text = todo.name, fontSize = 18.sp)
                     Spacer(modifier = Modifier.height(4.dp))
-                    if (todo.description?.isNotBlank() == true) {
+                    if (todo.description?.isNotBlank() == true)
+                    {
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
                                 text = todo.description,
                                 fontSize = 14.sp
                             )
                     }
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = todo.date ?: "No Date",
-                        fontSize = 14.sp,
-                        color = if (overdue) Color.Red else Color.Unspecified
-                    )
+                    if (todo.date?.isNotBlank() == true)
+                    {
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = todo.date ?: "",
+                            fontSize = 14.sp,
+                            color = if (overdue) Color.Red else Color.Unspecified
+                        )
+                    }
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = when {
-                            overdue && !todo.isDone -> "Overdue"
-                            todo.isDone -> "Done"
-                            else -> "Not Done"
+                            overdue && !todo.isDone -> "Dépassé"
+                            todo.isDone -> "fait"
+                            else -> "Pas fait"
                         },
                         color = when {
                             overdue && !todo.isDone -> Color.Red
@@ -148,7 +150,7 @@ fun TodoItem(
             val iconColor = if (abs(offsetX) > slidingThreshold.value) Color.Red.copy(red = 1f, green = 0.2f, blue = 0.2f) else MaterialTheme.colorScheme.onBackground
             Icon(
                 imageVector = Icons.Default.Delete,
-                contentDescription = "Delete",
+                contentDescription = "Supprimer",
                 tint = iconColor,
                 modifier = iconModifier
             )
@@ -173,7 +175,7 @@ fun TodoItem(
                             isConfirmVisible = false
                         }
                     ) {
-                        Text(text = "Confirm")
+                        Text(text = "Confirmer")
                     }
                     Spacer(modifier = Modifier.width(8.dp))
                     Button(
@@ -181,7 +183,7 @@ fun TodoItem(
                             isConfirmVisible = false
                         }
                     ) {
-                        Text(text = "Cancel")
+                        Text(text = "Annuler")
                     }
                 }
             }

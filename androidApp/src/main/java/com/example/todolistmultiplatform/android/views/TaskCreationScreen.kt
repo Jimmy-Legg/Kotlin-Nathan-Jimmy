@@ -64,7 +64,7 @@ fun TaskCreationScreen(
         TextField(
             value = name.value,
             onValueChange = { name.value = it },
-            label = { Text("Task Name") },
+            label = { Text("Nom de la tache") },
             isError = !isNameValid.value,
             modifier = Modifier.fillMaxWidth()
         )
@@ -114,7 +114,7 @@ fun TaskCreationScreen(
             modifier = Modifier.fillMaxWidth(),
             contentColor = MaterialTheme.colorScheme.inversePrimary,
             content = {
-                Text("Create Task", color = MaterialTheme.colorScheme.primary)
+                Text("Crée tache", color = MaterialTheme.colorScheme.primary)
             }
         )
     }
