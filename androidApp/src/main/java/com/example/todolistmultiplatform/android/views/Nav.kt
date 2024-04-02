@@ -66,10 +66,10 @@ fun NavGraph(
         composable("task_creation") {
             TaskCreationScreen(
                 navController = navController,
-                onTaskCreated = { name: String, description: String?, date: String? ->
+                onTaskCreated = { name: String, description: String?, date: String?, file: String? ->
                     val newTodoList = todoList.toMutableList()
                     val newId = getFreeId(newTodoList)
-                    newTodoList.add(Todo(newId, name, description, date, false))
+                    newTodoList.add(Todo(newId, name, description, date, file, false))
                     onAddTodo(newTodoList)
                     navController.popBackStack()
                 }

@@ -12,6 +12,7 @@ data class Todo(
         @SerializedName("name") val name: String,
         @SerializedName("description") val description: String?,
         @SerializedName("date") val date: String?,
+        @SerializedName("file") val file: String?,
         @SerializedName("isDone") val isDone: Boolean
 ) {
         fun isOverdue(): Boolean {
