@@ -21,7 +21,7 @@ import com.example.todolistmultiplatform.android.particles.ControlledExplosion
 @Composable
 fun CongratsScreen(
     todo: Todo,
-    onBackPressed: () -> Unit
+    onBack: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -39,7 +39,7 @@ fun CongratsScreen(
             Text(text = "Vous avez terminé la tâche :", fontSize = 18.sp)
             Text(text = todo.name, fontSize = 16.sp)
             Spacer(modifier = Modifier.height(32.dp))
-            Button(onClick = onBackPressed) {
+            Button(onClick = onBack) {
                 Text(text = "retour")
             }
         }

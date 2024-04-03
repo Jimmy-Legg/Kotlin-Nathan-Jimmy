@@ -46,12 +46,7 @@ class MainActivity : ComponentActivity() {
                         filteredTodoList = filteredTodoList,
                         onAddTodo = { newTodoList -> updateTodoList(newTodoList) },
                         onDeleteTask = { deletedTodo -> deleteTask(deletedTodo) },
-                        onCheckboxClicked = { todo, isChecked ->
-                            if (isChecked) {
-                                navController.navigate("congrats/${todo.id}")
-                            }
-                            updateTodoStatus(todo, isChecked)
-                        },
+                        onCheckboxClicked = { todo, isChecked -> updateTodoStatus(todo, isChecked) },
                         sortOption,
                         onSortOptionSelected = { sortOption -> changeSortOption(sortOption) }
                     )
