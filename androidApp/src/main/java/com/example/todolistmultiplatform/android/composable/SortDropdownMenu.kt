@@ -33,7 +33,7 @@ fun SortDropdownMenu(
             value = sortOption.name,
             onValueChange = {},
             readOnly = true,
-            label = { Text("Sort by") },
+            label = { Text("Trier par") },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(
                     expanded = expanded,

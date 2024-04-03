@@ -34,13 +34,13 @@ fun CongratsScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "Congratulations!", fontSize = 24.sp)
+            Text(text = "Bravo !", fontSize = 24.sp)
             Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "You completed the task:", fontSize = 18.sp)
+            Text(text = "Vous avez terminé la tâche :", fontSize = 18.sp)
             Text(text = todo.name, fontSize = 16.sp)
             Spacer(modifier = Modifier.height(32.dp))
             Button(onClick = onBackPressed) {
-                Text(text = "Back")
+                Text(text = "retour")
             }
         }
     }

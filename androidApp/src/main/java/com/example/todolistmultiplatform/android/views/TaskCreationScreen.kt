@@ -68,7 +68,7 @@ fun TaskCreationScreen(
             modifier = Modifier.fillMaxWidth(),
             contentColor = MaterialTheme.colorScheme.inversePrimary,
             content = {
-                Text("Create Task", color = MaterialTheme.colorScheme.primary)
+                Text("Crée tache", color = MaterialTheme.colorScheme.primary)
             }
         )
     }

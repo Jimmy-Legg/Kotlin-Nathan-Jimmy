@@ -57,7 +57,7 @@ fun ModifyTodoItemScreen(
             modifier = Modifier.fillMaxWidth(),
             contentColor = MaterialTheme.colorScheme.inversePrimary,
             content = {
-                Text("Modify Todo", color = MaterialTheme.colorScheme.primary)
+                Text("Modifier la tâche", color = MaterialTheme.colorScheme.primary)
             }
         )
     }

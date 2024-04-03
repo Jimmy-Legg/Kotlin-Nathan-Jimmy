@@ -17,7 +17,7 @@ fun TopBarApp(navController: NavHostController,pageName:String) {
         title = { Text(pageName) },
         navigationIcon = {
             IconButton(onClick = { navController.navigateUp() }) {
-                Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
+                Icon(Icons.Filled.ArrowBack, contentDescription = "Retour")
             }
         }
     )
