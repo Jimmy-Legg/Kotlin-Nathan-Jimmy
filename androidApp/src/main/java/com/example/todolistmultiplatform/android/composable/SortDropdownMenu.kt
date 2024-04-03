@@ -1,4 +1,4 @@
-package com.example.todolistmultiplatform.android.views
+package com.example.todolistmultiplatform.android.composable
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem

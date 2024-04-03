@@ -19,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.example.todolistmultiplatform.android.composable.TaskFormItem
+import com.example.todolistmultiplatform.android.composable.TopBarApp
 import com.example.todolistmultiplatform.android.item.Todo
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -39,8 +40,8 @@ fun ModifyTodoItemScreen(
     Column (modifier = Modifier
         .fillMaxSize()
         .padding(8.dp)
-        .verticalScroll(rememberScrollState()))
-    {
+        .verticalScroll(rememberScrollState())
+    ) {
         TopBarApp(navController = navController, pageName = "Modify")
 
         TaskFormItem(name, description, date, file, isNameValid)

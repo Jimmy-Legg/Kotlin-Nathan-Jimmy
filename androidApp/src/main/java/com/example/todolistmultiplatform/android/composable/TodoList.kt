@@ -1,4 +1,4 @@
-package com.example.todolistmultiplatform.android.views
+package com.example.todolistmultiplatform.android.composable
 
 import android.os.Build
 import androidx.annotation.RequiresApi

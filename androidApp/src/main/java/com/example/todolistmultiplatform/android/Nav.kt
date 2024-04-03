@@ -1,4 +1,4 @@
-package com.example.todolistmultiplatform.android.views
+package com.example.todolistmultiplatform.android
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -12,6 +12,10 @@ import androidx.navigation.navArgument
 import com.example.todolistmultiplatform.android.enums.SortOption
 import com.example.todolistmultiplatform.android.item.Todo
 import com.example.todolistmultiplatform.android.utils.getFreeId
+import com.example.todolistmultiplatform.android.views.AppMainScreen
+import com.example.todolistmultiplatform.android.views.CongratsScreen
+import com.example.todolistmultiplatform.android.views.ModifyTodoItemScreen
+import com.example.todolistmultiplatform.android.views.TaskCreationScreen
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

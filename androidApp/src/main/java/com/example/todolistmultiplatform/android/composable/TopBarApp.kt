@@ -1,4 +1,4 @@
-package com.example.todolistmultiplatform.android.views
+package com.example.todolistmultiplatform.android.composable
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack

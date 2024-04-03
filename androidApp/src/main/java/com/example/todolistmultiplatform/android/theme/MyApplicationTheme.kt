@@ -1,4 +1,4 @@
-package com.example.todolistmultiplatform.android
+package com.example.todolistmultiplatform.android.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape

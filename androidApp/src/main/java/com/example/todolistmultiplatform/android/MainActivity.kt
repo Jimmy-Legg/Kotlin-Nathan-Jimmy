@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.todolistmultiplatform.android.enums.SortOption
 import com.example.todolistmultiplatform.android.item.Todo
-import com.example.todolistmultiplatform.android.views.NavGraph
+import com.example.todolistmultiplatform.android.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
 
