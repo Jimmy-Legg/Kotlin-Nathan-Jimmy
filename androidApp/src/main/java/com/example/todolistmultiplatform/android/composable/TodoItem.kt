@@ -2,15 +2,12 @@ package com.example.todolistmultiplatform.android.composable
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectDragGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -111,7 +108,7 @@ fun TodoItem(
                     {
                         Spacer(modifier = Modifier.height(4.dp))
                         Text(
-                            text = todo.date ?: "",
+                            text = todo.date,
                             fontSize = 14.sp,
                             color = if (overdue) Color.Red else Color.Unspecified
                         )
