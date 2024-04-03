@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
@@ -56,7 +57,7 @@ fun TodoItem(
     var isConfirmVisible by remember { mutableStateOf(false) }
 
     val slidingThreshold = 75.dp
-    val startThreshold = 0.dp
+    val startThreshold = 10.dp
 
     val overdue = todo.isOverdue()
     Box(
@@ -157,36 +158,24 @@ fun TodoItem(
         }
 
         if (isConfirmVisible) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color.Black.copy(alpha = 0.5f))
-                    .clickable { /* do nothing to prevent clicks from passing through */ },
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(25.dp)
-                ) {
-                    Button(
-                        onClick = {
-                            onDelete()
-                            isConfirmVisible = false
-                        }
-                    ) {
-                        Text(text = "Confirmer")
+            AlertDialog(
+                onDismissRequest = { isConfirmVisible = false },
+                title = { Text(text = "Confirmation") },
+                text = { Text(text = "Êtes-vous sur de vouloirs supprimés cet élément ?") },
+                confirmButton = {
+                    Button(onClick = {
+                        onDelete()
+                        isConfirmVisible = false
+                    }) {
+                        Text(text = "Valider")
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Button(
-                        onClick = {
-                            isConfirmVisible = false
-                        }
-                    ) {
+                },
+                dismissButton = {
+                    Button(onClick = { isConfirmVisible = false }) {
                         Text(text = "Annuler")
                     }
                 }
-            }
+            )
         }
     }
 }
