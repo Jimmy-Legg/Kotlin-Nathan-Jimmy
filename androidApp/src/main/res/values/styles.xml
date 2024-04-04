@@ -1,5 +1,4 @@
 <resources>
     <style name="AppTheme" parent="android:Theme.Material.NoActionBar"/>
     <string name="AppName">TaskNinja</string>
-    <string name="Tripar">Trié par</string>
 </resources>

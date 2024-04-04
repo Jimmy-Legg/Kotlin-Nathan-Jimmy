@@ -2,6 +2,8 @@ package com.example.todolistmultiplatform.android
 
 import JsonUtils.loadFile
 import JsonUtils.saveTodoList
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -18,18 +20,26 @@ import androidx.navigation.compose.rememberNavController
 import com.example.todolistmultiplatform.android.enums.SortOption
 import com.example.todolistmultiplatform.android.item.Todo
 import com.example.todolistmultiplatform.android.theme.MyApplicationTheme
+import com.example.todolistmultiplatform.android.widget.TodoWidgetProvider
 
 class MainActivity : ComponentActivity() {
 
-    private var todoList by mutableStateOf(emptyList<Todo>())
+    private var todoList
+    by mutableStateOf(emptyList<Todo>())
 
     private var sortOption by mutableStateOf(SortOption.Tous)
-    private var filteredTodoList by mutableStateOf(emptyList<Todo>())
+    var filteredTodoList by mutableStateOf(emptyList<Todo>())
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val componentName = ComponentName(this, TodoWidgetProvider::class.java)
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(componentName)
+        if (appWidgetIds.isNotEmpty()) {
+            TodoWidgetProvider().onUpdate(this, appWidgetManager, appWidgetIds)
+        }
         todoList = loadFile(this)
         filteredTodoList = todoList
 

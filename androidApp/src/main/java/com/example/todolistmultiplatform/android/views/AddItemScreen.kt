@@ -26,7 +26,7 @@ import com.example.todolistmultiplatform.android.composable.TopBarApp
 @Composable
 fun AddItemScreen(
     navController: NavHostController,
-    onTaskCreated: (name: String,description: String?, date: String?, file: String?) -> Unit
+    onTaskCreated: (name: String, description: String?, date: String?, file: String?) -> Unit
 ) {
 
     val name = remember { mutableStateOf("") }
@@ -50,16 +50,13 @@ fun AddItemScreen(
 
         FloatingActionButton(
             onClick = {
-                if (isNameValid.value)
-                {
+                if (isNameValid.value) {
                     val descriptionToUse = description.value.ifBlank { null }
                     val fileToUse = file.value.ifBlank { null }
 
                     onTaskCreated(name.value, descriptionToUse, date.value, fileToUse)
-                    navController.navigate("task_list")
-                    {
-                        popUpTo("task_creation")
-                        {
+                    navController.navigate("task_list") {
+                        popUpTo("task_creation") {
                             inclusive = true
                         }
                     }
@@ -73,4 +70,3 @@ fun AddItemScreen(
         )
     }
 }
-
