@@ -23,11 +23,13 @@ class TodoWidgetProvider : AppWidgetProvider() {
 
     private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
         val todoList = JsonUtils.loadFile(context)
+        val filteredTodoList = todoList.filter { it.date != "" }.sortedBy { it.date }
+
         val views = RemoteViews(context.packageName, R.layout.todo_widget)
 
         views.removeAllViews(R.id.container)
 
-        todoList.take(3).forEach { todo ->
+        filteredTodoList.take(3).forEach { todo ->
             val todoView = RemoteViews(context.packageName, R.layout.todo_item)
             todoView.setTextViewText(R.id.name_text, todo.name)
 
@@ -36,10 +38,9 @@ class TodoWidgetProvider : AppWidgetProvider() {
                 todoView.setViewVisibility(R.id.description_text, View.VISIBLE)
             }
 
-            if (!todo.date.isNullOrEmpty()) {
-                todoView.setTextViewText(R.id.date_text, "Date: ${todo.date}")
-                todoView.setViewVisibility(R.id.date_text, View.VISIBLE)
-            }
+            todoView.setTextViewText(R.id.date_text, "Date: ${todo.date}")
+            todoView.setViewVisibility(R.id.date_text, View.VISIBLE)
+
 
             todoView.setTextViewText(R.id.is_done_text, "Is Done: ${todo.isDone}")
 
@@ -53,6 +54,8 @@ class TodoWidgetProvider : AppWidgetProvider() {
 
         appWidgetManager.updateAppWidget(appWidgetId, views)
     }
+
+
 
 
 
